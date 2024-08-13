@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Escritor de Email</title>
+<link rel="icon" href="caminho/para/seu-icone.ico" type="image/x-icon">
+<link rel="stylesheet" type="text/css" href="style2.css">
+<meta name="description" content="Uma breve descrição da minha página">
+<meta name="keywords" content="palavras-chave, separadas, por, vírgulas">
+<script type="text/javascript" src="jquery.js"></script>
+
+<style>
+    body {
+        text-align: center;
+        background: #1c1c1c;
+        font-family: Arial, sans-serif;
+        color: #fff;
+        margin: 0;
+        height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    nav {
+        display: flex;
+        width: 100%;
+        height: 100%;
+    }
+
+    nav .teams{
+        flex: 1;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 24px;
+        background: #03adfc;
+        color: #fff;
+        cursor: pointer;
+        transition: background 0.3s;
+        text-transform: uppercase;
+    }
+
+    nav .email{
+          flex: 1;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 24px;
+        background: #fc2803;
+        color: #fff;
+        cursor: pointer;
+        transition: background 0.3s;
+        text-transform: uppercase;
+    }
+    nav .teams:hover{
+        background: #028fcc;
+    }
+
+    nav .email:hover{
+        background: #fc3903;
+    }
+
+    .teams {
+        border-right: 2px solid #1c1c1c;
+    }
+
+    nav span {
+        pointer-events: none;
+    }
+</style>
+
+</head>
+<body>
+
+<nav>
+    <div class="teams" onclick="window.location.href='teams.html'">
+        <span>Email para Teams</span>
+    </div>
+    <div class="email" onclick="window.location.href='email.html'">
+        <span>Email para Estoque</span>
+    </div>
+</nav>
+
+</body>
+</html>

@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Escritor de Email</title>
+<link rel="icon" href="caminho/para/seu-icone.ico" type="image/x-icon">
+<link rel="stylesheet" type="text/css" href="style2.css">
+<meta name="description" content="Uma breve descrição da minha página">
+<meta name="keywords" content="palavras-chave, separadas, por, vírgulas">
+<script type="text/javascript" src="jquery.js"></script>
+
+</head>
+<body>
+
+    <a href="index.html" style="position: absolute; top: 10px; left: 10px; padding: 10px 20px; background-color: #007bff; color: white; text-decoration: none; border-radius: 5px;">Voltar</a>
+
+	<div class="pesquisa-box">
+		<h4>Digite o código, descrição e defeito</h4>
+		<input type="text" id="inputUnico" placeholder="Cole aqui">
+		<input type="text" id="inputDefeito" placeholder="Descreva o defeito">
+		<label for="selectAcao">Selecione a ação:</label>
+		<select id="selectAcao">
+			<option value="troca">Troca</option>
+			<option value="reparo">Reparo</option>
+		</select>
+	</div><!--pesquisa-box-->
+
+	<div class="btn">
+		<button id="generator-email">Gerar email</button>
+		<button id="copy-email">Copiar email</button>
+	</div><!--btn-->
+
+	<div id="email-container">
+		<p id="email"></p>
+	</div>
+
+	<script>
+		$(document).ready(function() {
+			let codigo = "";
+			let descricao = "";
+			let defeito = "";
+			let acao = "";
+
+			function gerarEmail() {
+				return `Prezado(a),
+
+Informamos que o produto do modelo <span>${descricao}</span> com o código <span>${codigo}</span> apresentou os defeitos: <span>${defeito}</span>. Diante disso, realizamos a <span>${acao}</span> dos mesmos.
+
+Agradecemos a atenção,
+
+RMA.`;
+			}
+
+			function atualizarEmail() {
+				var input = $("#inputUnico").val();
+				var inputDefeito = $("#inputDefeito").val();
+				var inputAcao = $("#selectAcao").val();
+				
+				// Expressões regulares para identificar as partes do input
+				var codigoRegex = /\b\d{13}\b/;
+				
+				var novoCodigo = input.match(codigoRegex);
+
+				if (novoCodigo) codigo = novoCodigo[0];
+				
+				// Remove o código para encontrar a descrição
+				descricao = input.replace(codigo, "").trim() || descricao;
+				defeito = inputDefeito || defeito;
+				acao = inputAcao || acao;
+
+				// Atualizar o email
+				var email = gerarEmail();
+				$("#email").html(email);  // Usando html para preservar os spans
+			}
+
+			$("#generator-email").click(function() {
+				atualizarEmail();
+			});
+
+			$("#copy-email").click(function() {
+				var emailText = $("#email").text();
+				var tempInput = $("<textarea>");
+				$("body").append(tempInput);
+				tempInput.val(emailText).select();
+				document.execCommand("copy");
+				tempInput.remove();
+				alert("Email copiado para a área de transferência!");
+			});
+
+			$("#inputUnico, #inputDefeito, #selectAcao").keypress(function(event) {
+				if (event.which == 13) { // 13 é o código da tecla Enter
+					event.preventDefault();
+					atualizarEmail();
+				}
+			});
+		});
+	</script>
+
+</body>
+</html>
