@@ -9,7 +9,6 @@
 <meta name="description" content="Uma breve descrição da minha página">
 <meta name="keywords" content="palavras-chave, separadas, por, vírgulas">
 <script type="text/javascript" src="jquery.js"></script>
-
 </head>
 <body>
 
@@ -18,12 +17,12 @@
 	<div class="pesquisa-box">
 		<h4>Digite o código, descrição, quantidade e CRG</h4>
 		<input type="text" id="inputUnico" placeholder="Cole aqui">
-	</div><!--pesquisa-box-->
+	</div>
 
 	<div class="btn">
 		<button id="generator-email">Gerar email</button>
 		<button id="copy-email">Copiar email</button>
-	</div><!--btn-->
+	</div>
 
 	<div id="email-container">
 		<p id="rma-destaque"></p>
@@ -32,17 +31,23 @@
 
 	<div class="btn">
 		<button id="copy-rma">Copiar Título do email</button>
-	</div><!--btn-->
+	</div>
 
 	<script>
 		$(document).ready(function() {
 			let codigo = "";
 			let quantidade = "";
 			let descricao = "";
-			let rmaCode = "xxxx"; // Código RMA padrão
+			let rmaCode = "xxxx";
+
+			function saudacao() {
+				var agora = new Date();
+				var horaBrasil = agora.getUTCHours() - 3;
+				return horaBrasil < 12 ? "Bom dia" : "Boa tarde";
+			}
 
 			function gerarEmail() {
-				return `Bom dia,
+				return `${saudacao()},
 
 Necessitamos de <span>${quantidade}</span> unidades do produto <span>${descricao}</span> do código <span>${codigo}</span>.
 
@@ -58,10 +63,9 @@ Atenciosamente.`;
 			function atualizarEmail() {
 				var input = $("#inputUnico").val();
 				
-				// Expressões regulares para identificar as partes do input
 				var codigoRegex = /\b\d{13}\b/;
 				var quantidadeRegex = /\b\d{1,2}\b/;
-				var rmaRegex = /\b\d{4}\b/;  // Para capturar o código RMA de 4 dígitos
+				var rmaRegex = /\b\d{4}\b/;
 				
 				var novoCodigo = input.match(codigoRegex);
 				var novaQuantidade = input.match(quantidadeRegex);
@@ -71,13 +75,11 @@ Atenciosamente.`;
 				if (novaQuantidade) quantidade = novaQuantidade[0];
 				if (novoRMA) rmaCode = novoRMA[0];
 				
-				// Remove o código e quantidade para encontrar a descrição
 				descricao = input.replace(codigo, "").replace(quantidade, "").replace(novoRMA, "").trim() || descricao;
 
-				// Atualizar o email e a linha RMA
 				var email = gerarEmail();
 				var rma = gerarRMA();
-				$("#email").html(email);  // Usando html para preservar os spans
+				$("#email").html(email);
 				$("#rma-destaque").text(rma);
 			}
 
@@ -106,7 +108,7 @@ Atenciosamente.`;
 			});
 
 			$("#inputUnico").keypress(function(event) {
-				if (event.which == 13) { // 13 é o código da tecla Enter
+				if (event.which == 13) {
 					event.preventDefault();
 					atualizarEmail();
 				}
