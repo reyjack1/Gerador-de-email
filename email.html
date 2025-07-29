@@ -1,120 +1,360 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Escritor de Email</title>
-<link rel="icon" href="caminho/para/seu-icone.ico" type="image/x-icon">
-<link rel="stylesheet" type="text/css" href="style.css">
-<meta name="description" content="Uma breve descrição da minha página">
-<meta name="keywords" content="palavras-chave, separadas, por, vírgulas">
-<script type="text/javascript" src="jquery.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Escritor de Email</title>
+    <link rel="icon" href="caminho/para/seu-icone.ico" type="image/x-icon">
+    <meta name="description" content="Uma breve descrição da minha página">
+    <meta name="keywords" content="palavras-chave, separadas, por, vírgulas">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:400,700&display=swap">
+    <style>
+        body {
+            background: #f7f9fa;
+            font-family: 'Roboto', Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        a.voltar-btn {
+            position: absolute;
+            top: 20px;
+            left: 30px;
+            padding: 10px 24px;
+            background: linear-gradient(90deg, #d32f2f 70%, #ef5350 100%);
+            color: #fff;
+            text-decoration: none;
+            border-radius: 30px;
+            font-weight: bold;
+            box-shadow: 0 2px 8px rgba(211, 47, 47, 0.15);
+            transition: background 0.2s;
+        }
+        a.voltar-btn:hover {
+            background: linear-gradient(90deg, #b71c1c 70%, #e57373 100%);
+        }
+        .container {
+            max-width: 620px;
+            margin: 100px auto 0 auto;
+            background: #fff;
+            border-radius: 18px;
+            padding: 36px 32px 24px 32px;
+            box-shadow: 0 6px 32px rgba(46, 49, 146, 0.06);
+            position: relative;
+        }
+        .pesquisa-box {
+            margin-bottom: 28px;
+            text-align: center;
+        }
+        .pesquisa-box h4 {
+            margin-bottom: 14px;
+            font-weight: 700;
+            color: #263238;
+            font-size: 1.15rem;
+        }
+        .input-row {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-bottom: 10px;
+            flex-wrap: wrap;
+        }
+        .input-row input {
+            padding: 10px 12px;
+            border: 1px solid #bdbdbd;
+            border-radius: 8px;
+            font-size: 1.06rem;
+            width: 140px;
+            transition: border-color 0.2s;
+            outline: none;
+        }
+        .input-row input:focus {
+            border-color: #1976d2;
+        }
+        .btn {
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+            margin: 12px 0;
+        }
+        .btn button, .add-item-btn {
+            background: linear-gradient(90deg, #1976d2 60%, #42a5f5 100%);
+            color: #fff;
+            border: none;
+            padding: 10px 22px;
+            border-radius: 22px;
+            font-size: 1rem;
+            font-weight: 600;
+            box-shadow: 0 2px 10px rgba(33,150,243,0.10);
+            cursor: pointer;
+            transition: background 0.2s, transform 0.1s;
+        }
+        .btn button:hover, .add-item-btn:hover {
+            background: linear-gradient(90deg, #1565c0 60%, #64b5f6 100%);
+            transform: translateY(-2px) scale(1.03);
+        }
+        #email-container {
+            background: #f4faff;
+            border-radius: 10px;
+            padding: 18px 18px 8px 18px;
+            margin-bottom: 16px;
+            min-height: 120px;
+            box-shadow: 0 1px 8px rgba(33,150,243,0.09);
+            word-break: break-word;
+        }
+        #rma-destaque {
+            font-size: 1.09rem;
+            font-weight: bold;
+            color: #1976d2;
+            margin-bottom: 14px;
+            letter-spacing: 0.5px;
+        }
+        #email {
+            font-size: 1.07rem;
+            color: #37474f;
+        }
+        .email-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 18px;
+        }
+        .email-table th, .email-table td {
+            padding: 8px 10px;
+            border: 1px solid #1976d2;
+            text-align: left;
+        }
+        .email-table th {
+            background: #e3f2fd;
+            color: #1976d2;
+            font-weight: bold;
+        }
+        .email-table td {
+            background: #fff;
+        }
+        .add-item-btn {
+            margin-bottom: 18px;
+            background: linear-gradient(90deg, #43a047 60%, #9ccc65 100%);
+            color: #fff;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 22px;
+            font-size: 1rem;
+            font-weight: 600;
+            box-shadow: 0 2px 10px rgba(67,160,71,0.08);
+            cursor: pointer;
+            transition: background 0.2s, transform 0.1s;
+        }
+        .add-item-btn:hover {
+            background: linear-gradient(90deg, #2e7d32 60%, #aed581 100%);
+            transform: translateY(-2px) scale(1.03);
+        }
+        @media (max-width: 700px) {
+            .container {
+                margin-top: 60px;
+                padding: 24px 5px 18px 5px;
+            }
+            .input-row input {
+                width: 100px;
+            }
+            .email-table th, .email-table td {
+                font-size: 0.96rem;
+            }
+        }
+        @media (max-width: 520px) {
+            .input-row {
+                flex-direction: column;
+                align-items: center;
+            }
+            .input-row input {
+                width: 92vw;
+                min-width: 0;
+            }
+        }
+    </style>
+    <script type="text/javascript" src="jquery.js"></script>
 </head>
 <body>
 
-    <a href="index.html" style="position: absolute; top: 10px; left: 10px; padding: 10px 20px; background-color: red; color: white; text-decoration: none; border-radius: 5px;">Voltar</a>
+    <a href="index.html" class="voltar-btn">Voltar</a>
 
-	<div class="pesquisa-box">
-		<h4>Digite o código, descrição, quantidade e CRG</h4>
-		<input type="text" id="inputUnico" placeholder="Cole aqui">
-	</div>
+    <div class="container">
+        <div class="pesquisa-box">
+            <h4>Preencha as informações do produto</h4>
+            <div class="input-row" id="input-fields">
+                <!-- Campos dos produtos aqui -->
+            </div>
+        </div>
+        <div class="btn">
+            <button id="generator-email">Gerar email</button>
+            <button id="copy-email">Copiar email</button>
+        </div>
+        <button class="add-item-btn" id="adicionar-produto">Adicionar mais produto</button>
+        <div id="email-container">
+            <div id="rma-destaque"></div>
+            <div id="email"></div>
+        </div>
+        <div class="btn">
+            <button id="copy-rma">Copiar Título do email</button>
+        </div>
+    </div>
 
-	<div class="btn">
-		<button id="generator-email">Gerar email</button>
-		<button id="copy-email">Copiar email</button>
-	</div>
+    <script>
+        $(document).ready(function() {
+            let produtos = [{
+                quantidade: "",
+                descricao: "",
+                codigo: "",
+                crg: ""
+            }];
+            let rmaCode = "xxxx"; // Inicial
 
-	<div id="email-container">
-		<p id="rma-destaque"></p>
-		<p id="email"></p>
-	</div>
+            // Renderiza os campos de input
+            function renderInputs() {
+                let html = '';
+                produtos.forEach((produto, idx) => {
+                    html += `
+                        <input type="text" placeholder="Quantidade" value="${produto.quantidade}" data-field="quantidade" data-idx="${idx}">
+                        <input type="text" placeholder="Descrição" value="${produto.descricao}" data-field="descricao" data-idx="${idx}">
+                        <input type="text" placeholder="Código" value="${produto.codigo}" data-field="codigo" data-idx="${idx}">
+                        <input type="text" placeholder="CRG" value="${produto.crg}" data-field="crg" data-idx="${idx}">
+                        <br>
+                    `;
+                });
+                $('#input-fields').html(html);
+            }
 
-	<div class="btn">
-		<button id="copy-rma">Copiar Título do email</button>
-	</div>
+            // Atualiza array sempre que digita nos inputs
+            $('#input-fields').on('input', 'input', function() {
+                let idx = $(this).data('idx');
+                let field = $(this).data('field');
+                let value = $(this).val();
 
-	<script>
-		$(document).ready(function() {
-			let codigo = "";
-			let quantidade = "";
-			let descricao = "";
-			let rmaCode = "xxxx";
+                produtos[idx][field] = value;
 
-			function saudacao() {
-				var agora = new Date();
-				var horaBrasil = agora.getUTCHours() - 3;
-				return horaBrasil < 12 ? "Bom dia" : "Boa tarde";
-			}
+                // Atualiza o RMA Code sempre que algum CRG for preenchido
+                // Pega do último CRG preenchido, se houver
+                let ultimoCRG = "";
+                for (let i = produtos.length - 1; i >= 0; i--) {
+                    if (produtos[i].crg && produtos[i].crg.trim() !== "") {
+                        ultimoCRG = produtos[i].crg;
+                        break;
+                    }
+                }
+                rmaCode = ultimoCRG || "xxxx";
+                atualizarEmail();
+            });
 
-			function gerarEmail() {
-				return `${saudacao()},
+            function saudacao() {
+                var agora = new Date();
+                var horaBrasil = agora.getUTCHours() - 3;
+                if (horaBrasil < 0) horaBrasil += 24;
+                return horaBrasil < 12 ? "Bom dia" : "Boa tarde";
+            }
 
-Necessitamos de <span>${quantidade}</span> unidades do produto <span>${descricao}</span> do código <span>${codigo}</span>.
+            function gerarEmail() {
+                let tableHTML = `
+                    <table class="email-table" style="border-collapse:collapse;width:100%;max-width:600px;">
+                        <tr>
+                            <th style="background:#e3f2fd;color:#1976d2;border:1px solid #1976d2;padding:8px 10px;">Quantidade</th>
+                            <th style="background:#e3f2fd;color:#1976d2;border:1px solid #1976d2;padding:8px 10px;">Descrição</th>
+                            <th style="background:#e3f2fd;color:#1976d2;border:1px solid #1976d2;padding:8px 10px;">Código</th>
+                            <th style="background:#e3f2fd;color:#1976d2;border:1px solid #1976d2;padding:8px 10px;">CRG</th>
+                        </tr>
+                `;
 
-Atender em MP por gentileza!
+                let existeProduto = false;
+                for (let p of produtos) {
+                    if (p.quantidade || p.descricao || p.codigo || p.crg) {
+                        existeProduto = true;
+                        tableHTML += `
+                            <tr>
+                                <td style="border:1px solid #1976d2;padding:8px 10px;">${p.quantidade || "—"}</td>
+                                <td style="border:1px solid #1976d2;padding:8px 10px;">${p.descricao || "—"}</td>
+                                <td style="border:1px solid #1976d2;padding:8px 10px;">${p.codigo || "—"}</td>
+                                <td style="border:1px solid #1976d2;padding:8px 10px;">${p.crg || "—"}</td>
+                            </tr>
+                        `;
+                    }
+                }
 
-Atenciosamente.`;
-			}
+                if (!existeProduto) {
+                    tableHTML += `
+                        <tr>
+                            <td colspan="4" style="text-align:center; color:#999;border:1px solid #1976d2;padding:8px 10px;">Nenhum produto adicionado.</td>
+                        </tr>
+                    `;
+                }
 
-			function gerarRMA() {
-				return `Solicitação de produto RMA (CRG-${rmaCode})`;
-			}
+                tableHTML += `</table>`;
 
-			function atualizarEmail() {
-				var input = $("#inputUnico").val();
-				
-				var codigoRegex = /\b\d{13}\b/;
-				var quantidadeRegex = /\b\d{1,2}\b/;
-				var rmaRegex = /\b\d{4}\b/;
-				
-				var novoCodigo = input.match(codigoRegex);
-				var novaQuantidade = input.match(quantidadeRegex);
-				var novoRMA = input.match(rmaRegex);
+                return `
+                    <div style="margin-bottom:13px;">${saudacao()},</div>
+                    <div style="margin-bottom:13px;">
+                        Segue abaixo os itens solicitados:<br>
+                    </div>
+                    ${tableHTML}
+                    <div style="margin-bottom:13px;">
+                        Atender em MP por gentileza!
+                    </div>
+                    <div style="margin-top:16px;">
+                        Atenciosamente.
+                    </div>
+                `;
+            }
 
-				if (novoCodigo) codigo = novoCodigo[0];
-				if (novaQuantidade) quantidade = novaQuantidade[0];
-				if (novoRMA) rmaCode = novoRMA[0];
-				
-				descricao = input.replace(codigo, "").replace(quantidade, "").replace(novoRMA, "").trim() || descricao;
+            function gerarRMA() {
+                return `Solicitação de produto RMA (CRG-${rmaCode})`;
+            }
 
-				var email = gerarEmail();
-				var rma = gerarRMA();
-				$("#email").html(email);
-				$("#rma-destaque").text(rma);
-			}
+            function atualizarEmail() {
+                $("#email").html(gerarEmail());
+                $("#rma-destaque").text(gerarRMA());
+            }
 
-			$("#generator-email").click(function() {
-				atualizarEmail();
-			});
+            $("#generator-email").click(function() {
+                atualizarEmail();
+            });
 
-			$("#copy-email").click(function() {
-				var emailText = $("#email").text();
-				var tempInput = $("<textarea>");
-				$("body").append(tempInput);
-				tempInput.val(emailText).select();
-				document.execCommand("copy");
-				tempInput.remove();
-				alert("Email copiado para a área de transferência!");
-			});
+            $("#adicionar-produto").click(function() {
+                produtos.push({quantidade:"",descricao:"",codigo:"",crg:""});
+                renderInputs();
+            });
 
-			$("#copy-rma").click(function() {
-				var rmaText = $("#rma-destaque").text();
-				var tempInput = $("<textarea>");
-				$("body").append(tempInput);
-				tempInput.val(rmaText).select();
-				document.execCommand("copy");
-				tempInput.remove();
-				alert("Solicitação RMA copiada para a área de transferência!");
-			});
+            // COPIA O HTML DA TABELA PARA PRESERVAR FORMATACAO
+            $("#copy-email").click(function() {
+                let el = document.createElement("div");
+                el.innerHTML = gerarEmail();
+                document.body.appendChild(el);
 
-			$("#inputUnico").keypress(function(event) {
-				if (event.which == 13) {
-					event.preventDefault();
-					atualizarEmail();
-				}
-			});
-		});
-	</script>
+                let range = document.createRange();
+                range.selectNodeContents(el);
 
+                let selection = window.getSelection();
+                selection.removeAllRanges();
+                selection.addRange(range);
+
+                try {
+                    document.execCommand('copy');
+                    alert("Email com tabela copiado com formatação para a área de transferência!");
+                } catch (err) {
+                    alert("Erro ao copiar! Tente manualmente.");
+                }
+                document.body.removeChild(el);
+                selection.removeAllRanges();
+            });
+
+            $("#copy-rma").click(function() {
+                var rmaText = $("#rma-destaque").text();
+                var tempInput = $("<textarea>");
+                $("body").append(tempInput);
+                tempInput.val(rmaText).select();
+                document.execCommand("copy");
+                tempInput.remove();
+                alert("Solicitação RMA copiada para a área de transferência!");
+            });
+
+            // Render inicial
+            renderInputs();
+            atualizarEmail();
+        });
+    </script>
 </body>
 </html>
