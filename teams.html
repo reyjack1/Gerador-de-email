@@ -4,98 +4,252 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Escritor de Email</title>
-<link rel="icon" href="caminho/para/seu-icone.ico" type="image/x-icon">
-<link rel="stylesheet" type="text/css" href="style2.css">
-<meta name="description" content="Uma breve descrição da minha página">
-<meta name="keywords" content="palavras-chave, separadas, por, vírgulas">
-<script type="text/javascript" src="jquery.js"></script>
 
+<script src="jquery.js"></script>
+
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f6f9;
+    height: 100vh;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Container */
+.pesquisa-box {
+    background: #fff;
+    padding: 25px;
+    border-radius: 10px;
+    width: 100%;
+    max-width: 400px;
+
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+.pesquisa-box h3 {
+    margin-bottom: 15px;
+    text-align: center;
+}
+
+/* Inputs */
+input, select {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+input:focus, select:focus {
+    border-color: #007bff;
+    outline: none;
+}
+
+/* Botão adicionar defeito */
+#add-defeito {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 10px;
+
+    background-color: #28a745;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+#add-defeito:hover {
+    background-color: #218838;
+}
+
+/* Botões */
+.btn {
+    margin-top: 15px;
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+}
+
+button {
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    background-color: #007bff;
+    color: white;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+#clear-fields {
+    background-color: #6c757d;
+}
+
+#clear-fields:hover {
+    background-color: #4b545c;
+}
+
+/* Email */
+#email-container {
+    margin-top: 20px;
+    background: #fff;
+    padding: 15px;
+    border-radius: 10px;
+
+    max-width: 400px;
+    width: 100%;
+
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    white-space: pre-line;
+}
+
+/* Voltar */
+a {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+
+    background: #007bff;
+    color: white;
+    padding: 8px 15px;
+    border-radius: 5px;
+    text-decoration: none;
+}
+</style>
 </head>
+
 <body>
 
-    <a href="index.html" style="position: absolute; top: 10px; left: 10px; padding: 10px 20px; background-color: #007bff; color: white; text-decoration: none; border-radius: 5px;">Voltar</a>
+<a href="index.html">Voltar</a>
 
-	<div class="pesquisa-box">
-		<h4>Digite o código, descrição e defeito</h4>
-		<input type="text" id="inputUnico" placeholder="Cole aqui">
-		<input type="text" id="inputDefeito" placeholder="Descreva o defeito">
-		<label for="selectAcao">Selecione a ação:</label>
-		<select id="selectAcao">
-			<option value="troca">Troca</option>
-			<option value="reparo">Reparo</option>
-		</select>
-	</div><!--pesquisa-box-->
+<div>
+    <div class="pesquisa-box">
+        <h3>Preencha as informações</h3>
 
-	<div class="btn">
-		<button id="generator-email">Gerar email</button>
-		<button id="copy-email">Copiar email</button>
-	</div><!--btn-->
+        <input type="text" id="inputCodigo" placeholder="Código do produto">
+        <input type="text" id="inputDescricao" placeholder="Descrição / Modelo">
 
-	<div id="email-container">
-		<p id="email"></p>
-	</div>
+        <div id="defeitos-container">
+            <input type="text" class="inputDefeito" placeholder="Descreva o defeito">
+        </div>
 
-	<script>
-		$(document).ready(function() {
-			let codigo = "";
-			let descricao = "";
-			let defeito = "";
-			let acao = "";
+        <button type="button" id="add-defeito">+ Adicionar defeito</button>
 
-			function gerarEmail() {
-				return `Prezado(a),
+        <label>Ação:</label>
+        <select id="selectAcao">
+            <option value="troca">Troca</option>
+            <option value="reparo">Reparo</option>
+            <option value="reparo e troca">Reparo e Troca</option>
+        </select>
+    </div>
 
-Informamos que o produto do modelo <span>${descricao}</span> com o código <span>${codigo}</span> apresentou os defeitos: <span>${defeito}</span>. Diante disso, realizamos a <span>${acao}</span> dos mesmos.
+    <div class="btn">
+        <button id="generator-email">Gerar email</button>
+        <button id="copy-email">Copiar email</button>
+        <button id="clear-fields">Limpar</button>
+    </div>
+
+    <div id="email-container">
+        <p id="email"></p>
+    </div>
+</div>
+
+<script>
+$(document).ready(function () {
+
+    function obterDados() {
+        let defeitos = [];
+
+        $(".inputDefeito").each(function () {
+            let valor = $(this).val().trim();
+            if (valor !== "") {
+                defeitos.push(valor);
+            }
+        });
+
+        return {
+            codigo: $("#inputCodigo").val().trim(),
+            descricao: $("#inputDescricao").val().trim(),
+            defeitos: defeitos,
+            acao: $("#selectAcao").val()
+        };
+    }
+
+    function montarListaDefeitos(defeitos) {
+        if (defeitos.length === 0) return "- Nenhum defeito informado";
+        return defeitos.map(d => `- ${d}`).join("\n");
+    }
+
+    function montarEmail({ codigo, descricao, defeitos, acao }) {
+        return `Prezado(a),
+
+Informamos que o produto modelo ${descricao}
+(código: ${codigo}) apresentou o(s) seguinte(s) defeito(s):
+
+${montarListaDefeitos(defeitos)}
+
+Diante disso, realizamos a ${acao} do equipamento.
 
 Agradecemos a atenção,
 
 RMA.`;
-			}
+    }
 
-			function atualizarEmail() {
-				var input = $("#inputUnico").val();
-				var inputDefeito = $("#inputDefeito").val();
-				var inputAcao = $("#selectAcao").val();
-				
-				// Expressões regulares para identificar as partes do input
-				var codigoRegex = /\b\d{13}\b/;
-				
-				var novoCodigo = input.match(codigoRegex);
+    function atualizarEmail() {
+        const dados = obterDados();
+        const email = montarEmail(dados);
+        $("#email").text(email);
+    }
 
-				if (novoCodigo) codigo = novoCodigo[0];
-				
-				// Remove o código para encontrar a descrição
-				descricao = input.replace(codigo, "").trim() || descricao;
-				defeito = inputDefeito || defeito;
-				acao = inputAcao || acao;
+    function copiarEmail() {
+        const texto = $("#email").text();
 
-				// Atualizar o email
-				var email = gerarEmail();
-				$("#email").html(email);  // Usando html para preservar os spans
-			}
+        navigator.clipboard.writeText(texto)
+            .then(() => alert("Email copiado com sucesso!"))
+            .catch(() => alert("Erro ao copiar."));
+    }
 
-			$("#generator-email").click(function() {
-				atualizarEmail();
-			});
+    function limparCampos() {
+        $("#inputCodigo").val("");
+        $("#inputDescricao").val("");
+        $("#defeitos-container").html('<input type="text" class="inputDefeito" placeholder="Descreva o defeito">');
+        $("#selectAcao").val("troca");
+        $("#email").text("");
+    }
 
-			$("#copy-email").click(function() {
-				var emailText = $("#email").text();
-				var tempInput = $("<textarea>");
-				$("body").append(tempInput);
-				tempInput.val(emailText).select();
-				document.execCommand("copy");
-				tempInput.remove();
-				alert("Email copiado para a área de transferência!");
-			});
+    // Adicionar defeito
+    $("#add-defeito").click(function () {
+        $("#defeitos-container").append(
+            '<input type="text" class="inputDefeito" placeholder="Descreva outro defeito">'
+        );
+    });
 
-			$("#inputUnico, #inputDefeito, #selectAcao").keypress(function(event) {
-				if (event.which == 13) { // 13 é o código da tecla Enter
-					event.preventDefault();
-					atualizarEmail();
-				}
-			});
-		});
-	</script>
+    // Eventos
+    $("#generator-email").click(atualizarEmail);
+    $("#copy-email").click(copiarEmail);
+    $("#clear-fields").click(limparCampos);
+
+    $(document).on("keypress", "input", function (event) {
+        if (event.which === 13) {
+            event.preventDefault();
+            atualizarEmail();
+        }
+    });
+
+});
+</script>
 
 </body>
 </html>
